@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -48,8 +47,8 @@ func api1Handler(w http.ResponseWriter, r *http.Request) {
 	client := http.Client{
 		Timeout: 3 * time.Second, //! Evitar problemas con que se trabe
 	}
-	host := getEnv("ENV_HOST", "localhost")
-	url := "http://" + host + ":8080/health"
+
+	url := "http://192.168.122.159:8080/health"
 	resp, err := client.Get(url) //? Puerto 8080 para la API1
 
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -89,8 +88,7 @@ func api2Handler(w http.ResponseWriter, r *http.Request) {
 	client := http.Client{
 		Timeout: 3 * time.Second, //! Evitar problemas con que se trabe
 	}
-	host := getEnv("ENV_HOST", "localhost")
-	url := "http://" + host + ":8081/health"
+	url := "http://192.168.122.159:8081/health"
 	resp, err := client.Get(url) //? Puerto 8081 para la API2
 
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -125,20 +123,12 @@ func api2Handler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getEnv(key, def string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return def
-}
-
 func main() {
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/api3/202300653/call-api1", api1Handler)
 	http.HandleFunc("/api3/202300653/call-api2", api2Handler)
 
 	port := ":8083"
-	host := getEnv("ENV_HOST", "localhost")
-	log.Println("API2 escuchando en http://" + host + port)
+	log.Println("API3 escuchando en http://192.168.122.110" + port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
